@@ -1,4 +1,16 @@
+:root {
+  --clr-primary: #5F3529;
+  --clr-primary-dark: #45261E;
+  --clr-primary-light: #6B3B2E;
+
+  --clr-dark-blue: #24505E;
+  --clr-light-blue: #388EAB;
+
+  --clr-dark-green: #2D5E34;
+  --clr-light-green: #5BAB66;
+}
+
 .side-bar {
-  background-color: #393a44;
+  background-color: var(--clr-dark-blue);
   min-width: 200px;
 }

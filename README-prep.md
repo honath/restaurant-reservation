@@ -3,9 +3,9 @@
 The software is for restaurant personnel to manage reservations and tables at their restaurants.  
 This is a monorepo.
 
-### 1. Working Prototype (to do later)
+### 1. Working Prototype
 
-(Example) You can access a working prototype of the React app here: https://your-app-client.herokuapp.com/ and Node app here: https://your-app-server.herokuapp.com/
+You can access a working prototype of the React app here: https://restaurant-reservation-client.vercel.app/dashboard
 
 ### 2. User Stories
 

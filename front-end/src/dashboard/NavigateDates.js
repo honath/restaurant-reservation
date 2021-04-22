@@ -28,14 +28,14 @@ function NavigateDates({ reservations, date, today }) {
   }
 
   function handleNext() {
-    if (currentIndex == sortedDates.length - 1) currentIndex = 0;
+    if (currentIndex === sortedDates.length - 1) currentIndex = 0;
     else currentIndex++;
 
     history.push(`/dashboard?date=${sortedDates[currentIndex]}`);
   }
 
   function handlePrev() {
-    if (currentIndex == 0) currentIndex = sortedDates.length - 1;
+    if (currentIndex === 0) currentIndex = sortedDates.length - 1;
     else currentIndex--;
 
     history.push(`/dashboard?date=${sortedDates[currentIndex]}`);

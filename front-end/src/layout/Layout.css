@@ -1,13 +1,17 @@
 :root {
-  --clr-primary: #5F3529;
-  --clr-primary-dark: #45261E;
-  --clr-primary-light: #6B3B2E;
+  --clr-primary: #5f3529;
+  --clr-primary-dark: #45261e;
+  --clr-primary-light: #6b3b2e;
 
-  --clr-dark-blue: #24505E;
-  --clr-light-blue: #388EAB;
+  --clr-dark-blue: #24505e;
+  --clr-light-blue: #388eab;
 
-  --clr-dark-green: #2D5E34;
-  --clr-light-green: #5BAB66;
+  --clr-dark-green: #2d5e34;
+  --clr-light-green: #5bab66;
+}
+
+html {
+  overflow-x: hidden;
 }
 
 .side-bar {

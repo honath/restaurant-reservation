@@ -1,0 +1,69 @@
+:root {
+  --clr-primary: #5f3529;
+  --clr-primary-dark: #45261e;
+  --clr-primary-light: #6b3b2e;
+
+  --clr-dark-blue: #24505e;
+  --clr-light-blue: #388eab;
+
+  --clr-dark-green: #2d5e34;
+  --clr-light-green: #5bab66;
+}
+
+header {
+  background-image: url("../images/wood-background.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center top;
+  background-size: cover;
+  height: 8rem;
+}
+
+/* Custom background colors & btn colors*/
+.bg-db {
+  background-color: var(--clr-dark-blue);
+}
+
+.btn-secondary,
+.bg-lb {
+  background-color: var(--clr-light-blue);
+}
+
+.btn-secondary:hover,
+.btn-secondary:active,
+.btn-secondary:focus {
+  background-color: #40a0c0;
+}
+
+.btn-primary,
+.bg-dg {
+  background-color: var(--clr-dark-green);
+}
+
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:focus {
+  background-color: #3c7c46;
+}
+
+.bg-lg {
+  background-color: var(--clr-light-green);
+}
+
+/* Custom text colors */
+.clr-db {
+  color: var(--clr-dark-blue);
+}
+
+.clr-lb {
+  color: var(--clr-light-blue);
+}
+
+.clr-dg {
+  color: var(--clr-dark-green);
+}
+
+.clr-lg {
+  color: var(--clr-light-green);
+}
+

@@ -9,7 +9,7 @@ You can access a working prototype of the React app here: https://restaurant-res
 
 ### 2. User Stories
 
-##### US-01 Create and list reservations (Importance - High)
+##### US-01 Create and list reservations (Importance - High) (Est. 6 hrs)
 
 - As a restaurant manager
 - I want to create a new reservation when a customer calls
@@ -80,67 +80,88 @@ The app's functionality includes:
 | :----------------------------------------------: | :-----------------------------------------------------: | :---------------------------------------------------: |
 | <img src="./resources/wireframes/Dashboard.svg"> | <img src="./resources/wireframes/Reservation-Form.svg"> | <img src="./resources/wireframes/Add-Table-Form.svg"> |
 
-### 6. Front-end Structure - React Components Map (to do later)
+### 6. Front-end Structure - React Components Map
 
-- (Example) **Index.js** (stateless)
-  - **App.js** (stateful)
-    - **LandingPage.js** (stateful) - gets the _"prop name"_ and the _"callback prop name"_ from the **App.js**
-      - **Login.js** (stateful) -
-      - **Register.js** (stateful) -
-    - **Navbar.js** (stateless) -
+- **index.js** (stateless)
+  - **App.js** (stateless)
+    - **Layout.js** (stateless)
+      - **Menu.js** (stateless) - Navigation sidebar
+      - **Routes.js** (stateless) - routing file for URLs
+        - **Dashboard.js** (stateless)
+          - **Reservations.js** (stateful) - gets _reservations_ and _date_ from Dashboard
+        - **NewReservation.js** (stateless)
+          - **NewResForm.js** (stateful) - gets _formData_, _setFormData_, _setFormError_, and today's date from NewReservation.js
 
-### 7. Back-end Structure - Business Objects (to do later)
+### 7. Back-end Structure - Business Objects
 
-- (Example) Users (database table)
-  - id (auto-generated)
-  - username (email validation)
-  - password (at least 8 chars, at least one alpha and a special character validation)
+- Reservations (database table)
+  - reservation_id (auto-generated)
+  - first_name
+  - last_name
+  - mobile_number
+  - reservation_date (formatted YYYY-MM-DD)
+  - reservation_time (formatted HH-MM 24hr time)
+  - people
+  - created/updated_at timestamps
 
-### 8. API Documentation (to do later)
+### 8. API Documentation
 
 #### API Overview
 
 ```text
-    /api
+    /
     .
-    ├── /auth
-    │   └── POST
-    │       ├── /login
-    ├── /users
-    │   └── POST
-    │       └── /
+    ├── /reservations
+    │   └── GET
+    │       |
+    |       POST
 ```
 
-##### POST `/api/auth/login`
+##### GET `/reservations`
+
+```js
+    // res.body
+    // array containing:
+    {
+        "reservation_id": 1,
+        "first_name": "John",
+        "last_name": "Smith",
+        "mobile_number": 1234567890,
+        "reservation_date": "2020-01-20",
+        "reservation_time": "14:30",
+        "people": 5,
+        "created_at": "2020-12-10 03:30:32"
+        "updated_at": "2020-12-10 03:30:32"
+    }
+```
+
+##### POST `/reservations`
 
 ```js
     // req.body
     {
-        "user_name": "demo@gmail.com",
-        "password": "Password1"
+        "first_name": "John",
+        "last_name": "Smith",
+        "mobile_number": 1234567890,
+        "reservation_date": "2020-01-20",
+        "reservation_time": "14:30",
+        "people": 5,
     }
 
     // res.body
     {
-    "authToken": String,
-        "userId": 1
-    }
-```
-
-##### POST `/api/users/`
-
-```js
-    // req.body
-    {
-        "user_name": "demo@gmail.com",
-        "password": "123456"
-    }
-
-
-    // res.body
-    {
-        "id": 1,
-        "user_name": "demo@gmail.com"
+        "status": 201,
+        "data": {
+            "reservation_id": 1,
+            "first_name": "John",
+            "last_name": "Smith",
+            "mobile_number": 1234567890,
+            "reservation_date": "2020-01-20",
+            "reservation_time": "14:30",
+            "people": 5,
+            "created_at": "2020-12-10 03:30:32"
+            "updated_at": "2020-12-10 03:30:32"
+        }
     }
 ```
 
@@ -151,12 +172,6 @@ The app's functionality includes:
 ![Landing Page](/github-images/screenshots/landing-page-screenshot.png)
 Register Page
 ![Register Page](/github-images/screenshots/register-page-screenshot.png)
-
-### 10. Development Roadmap (to do later)
-
-This is v1.0 of the app, but future enhancements are expected to include:
-
-- (Example) add more functionality
 
 ### Installation
 

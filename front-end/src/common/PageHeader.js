@@ -1,5 +1,5 @@
 import React from "react";
-import "./PageHeader.css";
+import "./common.css";
 
 /**
  * Page header displaying title of page

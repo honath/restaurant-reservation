@@ -22,7 +22,16 @@
     "test:8": "npm run test -- us-08",
     "test:drop-database": "node test/drop-database",
     "test:start": "npx cross-env LOG_LEVEL=warn NODE_ENV=test npm run test:start:run",
-    "test:start:run": "run-s test:drop-database start "
+    "test:start:run": "run-s test:drop-database start ",
+    "knex": "knex",
+    "migrate:dev": "knex migrate:latest --env development",
+    "migrate:test": "knex migrate:latest --env test",
+    "migrate:preview": "knex migrate:latest --env preview",
+    "migrate:prod": "knex migrate:latest --env production",
+    "seed:dev": "knex seed:run --env development",
+    "seed:test": "knex seed:run --env test",
+    "seed:preview": "knex seed:run --env preview",
+    "seed:prod": "knex seed:run --env production"
   },
   "keywords": [],
   "author": "",

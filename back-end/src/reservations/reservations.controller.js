@@ -25,7 +25,7 @@ async function create(req, res) {
 
   const newReservation = await service.create(reservation);
 
-  res.status(200).json(await newReservation);
+  res.status(201).json(await newReservation);
 }
 
 // ====================== Validation ======================

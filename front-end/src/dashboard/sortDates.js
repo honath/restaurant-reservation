@@ -3,11 +3,11 @@
  * @param {Array from Set} dates 
  * @returns {Sorted Array}
  */
-function sortDates(dates) {
+export function sortDates(dates) {
   return dates.sort(compare);
 }
 
-function compare(first, sec) {
+export function compare(first, sec) {
   const firstDate = first.split("-");
   const secDate = sec.split("-");
 
@@ -16,10 +16,6 @@ function compare(first, sec) {
    * if needed, check by month [1]
    * finally, check by day [2]
    * if exact match, return 0
-   * 
-   * Exact match should never happen,
-   * as array being sorted is derived
-   * from a set
    */
   if (firstDate[0] > secDate[0]) return 1;
   else if (firstDate[0] < secDate[0]) return -1;
@@ -33,5 +29,3 @@ function compare(first, sec) {
       }
   }
 }
-
-export default sortDates;

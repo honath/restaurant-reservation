@@ -135,6 +135,38 @@ function isFutureDate(req, res, next) {
 
   next();
 }
+
+/**
+ * Checks that reservation time
+ * is between 10:30 and 21:30
+ */
+function isValidTime(req, res, next) {
+  const methodName = "isValidTime";
+  req.log.debug({ __filename, methodName });
+
+  const lower = toMinutes("10:30"); // 10:30 AM
+  const upper = toMinutes("21:30"); // 9:30 PM
+  const { reservation_time } = res.locals.reservation;
+
+  const formattedTIme = toMinutes(reservation_time);
+  req.log.trace({ __filename, methodName: "toMinutes", formattedTIme });
+
+  if (givenTime < lower || givenTime > upper) {
+    next({
+      status: 400,
+      message: `The reservation time must be between 10:30 - 21:30. Your time: ${reservation_time}`,
+    });
+
+    req.log.trace({
+      __filename,
+      methodName,
+      valid: false,
+      reason: `${reservation_time} is not a valid time. Valid timeframe is between 10:30 - 21:30.`,
+    });
+  }
+
+  next();
+}
 // #endregion
 
 // #region ============= Helper Functions ================
@@ -168,6 +200,12 @@ function compare(first, sec) {
     }
   }
 }
+
+function toMinutes(timeString) {
+  const [hour, minutes] = timeString.split(":");
+
+  return Number.parseInt(hour) * 60 + Number.parseInt(minutes);
+}
 // #endregion
 
 module.exports = {
@@ -176,6 +214,7 @@ module.exports = {
     validateReservation,
     isNotTuesday,
     isFutureDate,
+    isValidTime,
     asyncErrorBoundary(create),
   ],
 };

@@ -21,7 +21,7 @@ You can access a working prototype of the React app here: https://restaurant-res
 - I only want to allow reservations to be created on a day when we are open
 - so that users do not accidentally create a reservation for days when we are closed.
 
-##### US-03 Create reservation within eligible timeframe (Importance - Medium)
+##### US-03 Create reservation within eligible timeframe (Importance - Medium) (Est. 1 hr)
 
 - As a restaurant manager
 - I only want to allow reservations to be created during business hours, up to 60 minutes before closing

@@ -4,6 +4,7 @@ import { useHistory } from "react-router";
 import "../common/common.css";
 import { createReservation } from "../utils/api";
 import isValidDate from "./isValidDate";
+import isValidTime from "./isValidTime";
 
 /**
  * Renders form
@@ -41,11 +42,16 @@ function NewResForm({
     event.preventDefault();
 
     const date = formData.reservation_date;
+    const time = formData.reservation_time;
 
-    const valid = await isValidDate(date, today);
-
-    if (!valid)
-      setDateError({ message: "Reservation must be on a future date and not a Tuesday." });
+    if (!(await isValidDate(date, today)))
+      setDateError({
+        message: "Reservation must be on a future date and not a Tuesday.",
+      });
+    else if (!(await isValidTime(time)))
+      setDateError({
+        message: `${time} is not a valid reservation time. Reservation must be between 10:30 AM and 9:30 PM`,
+      });
     else
       await createReservation(formData)
         .then((res) => history.push(`/dashboard?date=${date}`))

@@ -15,7 +15,7 @@ You can access a working prototype of the React app here: https://restaurant-res
 - I want to create a new reservation when a customer calls
 - so that I know how many customers will arrive at the restaurant on a given day.
 
-##### US-02 Create reservation on a future, working date (Importance - High)
+##### US-02 Create reservation on a future, working date (Importance - High) (Est. 2 hrs)
 
 - As a restaurant manager
 - I only want to allow reservations to be created on a day when we are open
@@ -90,7 +90,9 @@ The app's functionality includes:
         - **Dashboard.js** (stateless)
           - **Reservations.js** (stateful) - gets _reservations_ and _date_ from Dashboard
         - **NewReservation.js** (stateless)
-          - **NewResForm.js** (stateful) - gets _formData_, _setFormData_, _setFormError_, and today's date from NewReservation.js
+          - **NewResForm.js** (stateful) - gets _formData_, _setFormData_, _setDateError_, _setFormError_, and today's date from NewReservation.js
+      - **ErrorAlert.js** (stateful) - Displays error alert when an error is present
+      - **NotFound.js** (stateless) 404 Not Found
 
 ### 7. Back-end Structure - Business Objects
 

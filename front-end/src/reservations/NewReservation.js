@@ -13,6 +13,7 @@ import NewResForm from "./NewResForm";
  */
 function NewReservation() {
   const [formError, setFormError] = useState(null);
+  const [dateError, setDateError] = useState(null);
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -29,9 +30,11 @@ function NewReservation() {
         formData={formData}
         setFormData={setFormData}
         setFormError={setFormError}
+        setDateError={setDateError}
         today={today()}
       />
       <ErrorAlert error={formError}/>
+      <ErrorAlert error={dateError}/>
     </Fragment>
   );
 }

@@ -3,6 +3,7 @@ import { useHistory } from "react-router";
 
 import "../common/common.css";
 import { createReservation } from "../utils/api";
+import isValidDate from "./isValidDate";
 
 /**
  * Renders form
@@ -17,7 +18,13 @@ import { createReservation } from "../utils/api";
  * @param {String} today today's date
  * @returns {JSX.Element}
  */
-function NewResForm({ formData, setFormData, setFormError, today }) {
+function NewResForm({
+  formData,
+  setFormData,
+  setFormError,
+  setDateError,
+  today,
+}) {
   const history = useHistory();
 
   function handleChange({ target }) {
@@ -34,10 +41,15 @@ function NewResForm({ formData, setFormData, setFormError, today }) {
     event.preventDefault();
 
     const date = formData.reservation_date;
-    //
-    await createReservation(formData)
-      .then((res) => history.push(`/dashboard?date=${date}`))
-      .catch(setFormError);
+
+    const valid = await isValidDate(date, today);
+
+    if (!valid)
+      setDateError({ message: "Reservation must be on a future date and not a Tuesday." });
+    else
+      await createReservation(formData)
+        .then((res) => history.push(`/dashboard?date=${date}`))
+        .catch(setFormError);
   }
 
   function handleCancel(event) {

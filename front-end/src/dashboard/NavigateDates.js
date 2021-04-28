@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router";
-import sortDates from "./sortDates";
+import { sortDates } from "./sortDates";
 
 import "../common/common.css";
 

@@ -1,6 +1,7 @@
 const service = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
+// #region ============= Primary =========================
 /**
  * List handler for reservation resources
  */
@@ -27,10 +28,12 @@ async function create(req, res) {
 
   res.status(201).json(await newReservation);
 }
+// #endregion
 
-// ====================== Validation ======================
+// #region ============= Validation ======================
 /**
- *
+ * Checks form data from client side
+ * Verifies that all fields are filled
  */
 function validateReservation(req, res, next) {
   const methodName = "validateReservation";
@@ -72,7 +75,107 @@ function validateReservation(req, res, next) {
   req.log.trace({ __filename, methodName, valid: true });
 }
 
+/**
+ * Checks that date given is
+ * not on a Tuesday
+ */
+function isNotTuesday(req, res, next) {
+  const methodName = "isNotTuesday";
+  req.log.debug({ __filename, methodName });
+
+  const { reservation_date } = res.locals.reservation;
+
+  const day = new Date(reservation_date).getUTCDay();
+
+  if (day === 2) {
+    next({
+      status: 400,
+      message: `The restaurant is closed on Tuesdays. Please choose a different day.`,
+    });
+
+    req.log.trace({
+      __filename,
+      methodName,
+      valid: false,
+      reason: "Tuesday is not a valid day.",
+    });
+  }
+
+  next();
+  req.log.trace({ __filename, methodName, valid: true });
+}
+
+/**
+ * Checks that date given is on
+ * a later/future date from "today"
+ */
+function isFutureDate(req, res, next) {
+  const methodName = "isFutureDate";
+  req.log.debug({ __filename, methodName });
+
+  const { reservation_date } = res.locals.reservation;
+  const today = new Date();
+
+  const formattedDate = formatDate(today);
+  req.log.trace({ __filename, methodName: "formatDate", formattedDate });
+
+  if (compare(reservation_date, formattedDate) !== 1) {
+    next({
+      status: 400,
+      message: `The reservation must be on a future date.`,
+    });
+
+    req.log.trace({
+      __filename,
+      methodName,
+      valid: false,
+      reason: `${reservation_date} is not in the future. Today: ${formattedDate}`,
+    });
+  }
+
+  next();
+}
+// #endregion
+
+// #region ============= Helper Functions ================
+function formatDate(date) {
+  const month = date.getUTCMonth() + 1;
+  const day = date.getUTCDate();
+  const year = date.getUTCFullYear();
+
+  return `${year}-${month}-${day}`;
+}
+
+function compare(first, sec) {
+  const firstDate = first.split("-");
+  const secDate = sec.split("-");
+
+  /**
+   * Check by year first [0]
+   * if needed, check by month [1]
+   * finally, check by day [2]
+   * if exact match, return 0
+   */
+  if (firstDate[0] > secDate[0]) return 1;
+  else if (firstDate[0] < secDate[0]) return -1;
+  else {
+    if (firstDate[1] > secDate[1]) return 1;
+    else if (firstDate[1] < secDate[1]) return -1;
+    else {
+      if (firstDate[2] > secDate[2]) return 1;
+      else if (firstDate[2] < secDate[2]) return -1;
+      else return 0;
+    }
+  }
+}
+// #endregion
+
 module.exports = {
   list: asyncErrorBoundary(list),
-  create: [validateReservation, asyncErrorBoundary(create)],
+  create: [
+    validateReservation,
+    isNotTuesday,
+    isFutureDate,
+    asyncErrorBoundary(create),
+  ],
 };

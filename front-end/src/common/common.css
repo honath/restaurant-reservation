@@ -20,8 +20,16 @@ header {
 }
 
 /* Custom background colors & btn colors*/
+.btn {
+  border-color: transparent;
+}
+
 .bg-db {
   background-color: var(--clr-dark-blue);
+}
+
+.bg-lg {
+  background-color: var(--clr-light-green);
 }
 
 .btn-secondary,
@@ -30,9 +38,12 @@ header {
 }
 
 .btn-secondary:hover,
-.btn-secondary:active,
 .btn-secondary:focus {
   background-color: #40a0c0;
+}
+
+.btn.btn-secondary:active:focus {
+  background-color: #45aed1;
 }
 
 .btn-primary,
@@ -41,13 +52,12 @@ header {
 }
 
 .btn-primary:hover,
-.btn-primary:active,
 .btn-primary:focus {
   background-color: #3c7c46;
 }
 
-.bg-lg {
-  background-color: var(--clr-light-green);
+.btn.btn-primary:active:focus {
+  background-color: #499755;
 }
 
 /* Custom text colors */
@@ -67,3 +77,46 @@ header {
   color: var(--clr-light-green);
 }
 
+@media all and (max-width: 768px) {
+  /* #region Menu */
+  nav {
+    margin: 0 0;
+    padding: 0 0;
+  }
+
+  #accordionSidebar {
+    flex-direction: row;
+  }
+
+  #accordionSidebar .nav-link {
+    font-size: .7rem;
+  }
+  /* #endregion Menu */
+
+  /* #region PageHeader */
+  header {
+    max-height: 6rem;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  header > h3 {
+    font-size: 1rem;
+  }
+  /* #endregion PageHeader */
+
+  /* #region Reservations */
+  .res-text > * {
+    font-size: .7rem;
+  }
+
+  .btn {
+    font-size: .8rem;
+  }
+  /* #endregion Reservations */
+}

@@ -14,6 +14,7 @@ const API_BASE_URL =
 const headers = new Headers();
 headers.append("Content-Type", "application/json");
 
+// #region Reservations
 /**
  * Takes in a axios cancel token
  * @param source
@@ -48,26 +49,124 @@ export async function listReservations(source) {
 }
 
 /**
+ * Gets single reservation by
+ * reservation_id
+ * @param {Integer} reservation_id
+ * @param {Token} source
+ * @returns {Promise<[reservation]>}
+ */
+export function readReservation(reservation_id, source) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}`;
+
+  const config = {
+    headers,
+    cancelToken: source.token,
+  };
+
+  return axios
+    .get(url, { config })
+    .then()
+    .catch((err) => {
+      return Promise.reject({
+        status: err.status,
+        message: err.data.message,
+      });
+    });
+}
+
+/**
  * Takes in form data as
  * new reservation object
  * @param {Object} reservation
  * @returns {Promise}
  */
-export async function createReservation(reservation) {
+export function createReservation(reservation) {
   const url = `${API_BASE_URL}/reservations`;
 
   const config = { headers };
 
-  try {
-    const res = await axios.post(url, { data: reservation }, { config });
-    return Promise.resolve({
-      status: res.status,
-      data: res.data,
+  return axios
+    .post(url, { data: reservation }, { config })
+    .then(({ data }) => data[0])
+    .catch((err) => {
+      return Promise.reject({
+        status: err.status,
+        message: err.data.message,
+      });
     });
-  } catch ({ response }) {
-    return Promise.reject({
-      status: response.status,
-      message: response.data.message,
-    });
-  }
 }
+// #endregion Reservations
+
+// #region Tables
+/**
+ * Takes in a axios cancel token
+ * @param source
+ * @returns {Promise<[tables]>}
+ */
+export function listTables(source) {
+  const url = `${API_BASE_URL}/tables`;
+
+  const config = {
+    headers,
+    cancelToken: source.token,
+  };
+
+  return axios
+    .get(url, { config })
+    .then()
+    .catch((err) => {
+      return Promise.reject({
+        status: err.status,
+        message: err.data.message,
+      });
+    });
+}
+
+/**
+ * Takes in form data as
+ * new table object
+ * @param {Object} table
+ * @returns {Promise}
+ */
+export function createTable(table) {
+  const url = `${API_BASE_URL}/tables`;
+
+  const config = { headers };
+
+  return axios
+    .post(url, { data: table }, { config })
+    .then(({ data }) => data[0])
+    .catch((err) => {
+      return Promise.reject({
+        status: err.status,
+        message: err.data.message,
+      });
+    });
+}
+
+/**
+ * Takes in table and reservation
+ * ID to update related Table's
+ * reservation_id, "seating"
+ * related reservation at that
+ * table.
+ * @param {Integer} table_id
+ * @param {Integer} reservation_id
+ * @returns {Promise}
+ */
+export function seatTable(table_id, reservation_id) {
+  const url = `${API_BASE_URL}/tables/${table_id}/seat`;
+
+  const config = { headers };
+
+  return axios
+    .put(url, { data: { reservation_id } }, { config })
+    .then(({ data }) => data[0])
+    .catch((err) => {
+      return Promise.reject({
+        status: err.status,
+        message: err.data.message,
+      });
+    });
+}
+// #endregion Tables

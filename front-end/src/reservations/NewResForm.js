@@ -1,10 +1,10 @@
 import React from "react";
 import { useHistory } from "react-router";
-
-import "../common/common.css";
 import { createReservation } from "../utils/api";
 import isValidDate from "./isValidDate";
 import isValidTime from "./isValidTime";
+
+import "../common/common.css";
 
 /**
  * Renders form
@@ -13,9 +13,11 @@ import isValidTime from "./isValidTime";
  * or cancel
  * ---
  * Submission adds
- * column to Table "reservations"
+ * row to Table "reservations"
  * @param {Object} formData state
  * @param {Function} setFormData state manipulator
+ * @param {String} setFormError form error state manipulator
+ * @param {String} setDateError date/time error state manipulator
  * @param {String} today today's date
  * @returns {JSX.Element}
  */
@@ -54,7 +56,10 @@ function NewResForm({
       });
     else
       await createReservation(formData)
-        .then((res) => history.push(`/dashboard?date=${date}`))
+        .then((res) => {
+          console.log(res)
+          history.push(`/dashboard?date=${date}`)
+        })
         .catch(setFormError);
   }
 
@@ -66,9 +71,9 @@ function NewResForm({
 
   return (
     <main className="mt-4">
-      <form>
-        <div className="d-flex mb-4">
-          <div className="col-4">
+      <form className="m-3">
+        <div className="form-row mb-4">
+          <div className="col-md-3">
             <label htmlFor="first_name" className="form-label mb-0">
               First Name
             </label>
@@ -81,7 +86,7 @@ function NewResForm({
               required={true}
             />
           </div>
-          <div className="col-4">
+          <div className="col-md-3">
             <label htmlFor="last_name" className="form-label mb-0">
               Last Name
             </label>
@@ -95,21 +100,23 @@ function NewResForm({
             />
           </div>
         </div>
-        <div className="col-3 mb-4">
-          <label htmlFor="mobile_number" className="form-label mb-0">
-            Phone Number
-          </label>
-          <input
-            type="tel"
-            className="form-control"
-            name="mobile_number"
-            value={formData.mobile_number}
-            onChange={handleChange}
-            required={true}
-          />
+        <div className="form-row mb-4">
+          <div className="col-md-3">
+            <label htmlFor="mobile_number" className="form-label mb-0">
+              Phone Number
+            </label>
+            <input
+              type="tel"
+              className="form-control"
+              name="mobile_number"
+              value={formData.mobile_number}
+              onChange={handleChange}
+              required={true}
+            />
+          </div>
         </div>
-        <div className="d-flex mb-4">
-          <div className="col-3">
+        <div className="form-row mb-4">
+          <div className="col-md-2">
             <label htmlFor="reservation_date" className="form-label mb-0">
               Date of Reservation
             </label>
@@ -125,7 +132,7 @@ function NewResForm({
               required={true}
             />
           </div>
-          <div className="col-3">
+          <div className="col-md-2">
             <label htmlFor="reservation_time" className="form-label mb-0">
               Time of Reservation
             </label>
@@ -140,7 +147,7 @@ function NewResForm({
               required={true}
             />
           </div>
-          <div className="col-2">
+          <div className="col-md-2">
             <label htmlFor="people" className="form-label mb-0">
               Party Size
             </label>
@@ -154,17 +161,17 @@ function NewResForm({
             />
           </div>
         </div>
-        <div className="d-flex">
+        <div className="form-row">
           <button
             type="submit"
-            className="btn btn-primary col-1 mx-3 p-2"
+            className="btn btn-primary mx-3 p-2 px-3"
             onClick={handleSubmit}
           >
             Submit
           </button>
           <button
             type="button"
-            className="btn btn-secondary col-1 p-2"
+            className="btn btn-secondary p-2 px-3"
             onClick={handleCancel}
           >
             Cancel

@@ -1,6 +1,7 @@
 import React from "react";
-
 import { Link } from "react-router-dom";
+
+import "./common.css";
 
 /**
  * Defines the menu for this application.
@@ -21,7 +22,7 @@ function Menu() {
           </div>
         </Link>
         <hr className="sidebar-divider my-0" />
-        <ul className="nav navbar-nav text-light" id="accordionSidebar">
+        <ul className="nav navbar-nav  text-light" id="accordionSidebar">
           <li className="nav-item p-2">
             <Link className="nav-link" to="/dashboard">
               <span className="oi oi-dashboard" />

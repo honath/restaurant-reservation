@@ -18,3 +18,9 @@ html {
   background-color: var(--clr-dark-blue);
   min-width: 200px;
 }
+
+@media all and (max-width: 768px) {
+  .side-bar {
+    max-height: 7.3rem;
+  }
+}

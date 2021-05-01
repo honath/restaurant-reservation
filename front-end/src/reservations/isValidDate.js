@@ -1,4 +1,4 @@
-import { compare } from "../dashboard/sortDates";
+import { compare } from "../common/sortDates";
 
 /**
  * Takes in date from form data

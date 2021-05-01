@@ -1,44 +1,23 @@
 import React from "react";
 import { useHistory } from "react-router";
-import { sortDates } from "./sortDates";
+import { next, previous } from "../utils/date-time";
 
 import "../common/common.css";
 
-function NavigateDates({ reservations, date, today }) {
+
+function NavigateDates({ date, today }) {
   const history = useHistory();
-
-  /* List of unqiue reservation dates */
-  const dates = new Set();
-
-  /* Add today and given date*/
-  dates.add(today);
-  dates.add(date);
-
-  /**
-   * Add dates to set for unique dates,
-   * then sort by date
-   */
-  reservations.forEach((res) => dates.add(res.reservation_date));
-  const sortedDates = sortDates([...dates]);
-
-  let currentIndex = sortedDates.indexOf(date);
 
   function handleToday() {
     history.push(`/dashboard?date=${today}`);
   }
 
   function handleNext() {
-    if (currentIndex === sortedDates.length - 1) currentIndex = 0;
-    else currentIndex++;
-
-    history.push(`/dashboard?date=${sortedDates[currentIndex]}`);
+    history.push(`/dashboard?date=${next(date)}`);
   }
 
   function handlePrev() {
-    if (currentIndex === 0) currentIndex = sortedDates.length - 1;
-    else currentIndex--;
-
-    history.push(`/dashboard?date=${sortedDates[currentIndex]}`);
+    history.push(`/dashboard?date=${previous(date)}`);
   }
 
   return (

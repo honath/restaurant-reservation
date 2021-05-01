@@ -1,5 +1,8 @@
 import React from "react";
-import sortReservations from "./sortReservations";
+import { Link } from "react-router-dom";
+import sortReservations from "../common/sortReservations";
+
+import "../common/common.css";
 
 /**
  * Takes in and formats reservations as a table
@@ -14,13 +17,22 @@ function Reservations({ reservations, date }) {
   /* Format reservations as table rows */
   const mapReservations = [];
   sortedReservations.forEach((res, index) => {
+    const { reservation_id } = res;
     if (res.reservation_date === date)
       mapReservations.push(
-        <tr key={res.reservation_id}>
+        <tr key={res.reservation_id} className="res-text">
           <td className="text-center">{`${res.first_name} ${res.last_name}`}</td>
           <td className="text-center">{res.mobile_number}</td>
           <td className="text-center">{res.reservation_date}</td>
           <td className="text-center">{res.reservation_time}</td>
+          <td className="text-center">
+            <Link
+              className="btn btn-secondary"
+              to={`/reservations/${reservation_id}/seat`}
+            >
+              Seat
+            </Link>
+          </td>
         </tr>
       );
   });
@@ -30,15 +42,15 @@ function Reservations({ reservations, date }) {
     return (
       <table className="table">
         <thead>
-          <tr>
+          <tr className="res-text">
             <th className="text-center">Name</th>
             <th className="text-center">Contact</th>
             <th className="text-center">Date</th>
             <th className="text-center">Time</th>
-            {/* <th className="text-center">Actions</th> */}
+            <th className="text-center">Actions</th>
           </tr>
         </thead>
-        <tbody>{mapReservations}</tbody>
+        <tbody className="res-text">{mapReservations}</tbody>
       </table>
     );
   }

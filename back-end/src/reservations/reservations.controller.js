@@ -4,6 +4,7 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 // #region ============= Primary =========================
 /**
  * List handler for reservation resources
+ * @returns {Array of Objects} All reservations from table
  */
 async function list(req, res) {
   const methodName = "list";
@@ -27,6 +28,20 @@ async function create(req, res) {
   const newReservation = await service.create(reservation);
 
   res.status(201).json(await newReservation);
+}
+
+/**
+ * Retrieves reservation by ID
+ * from DB and sends to client
+ * @returns {Object} Reservation from table
+ */
+function read(req, res) {
+  const methodName = "read";
+  req.log.debug({ __filename, methodName });
+
+  const { reservation } = res.locals;
+
+  res.status(200).json(reservation);
 }
 // #endregion
 
@@ -67,7 +82,7 @@ function validateReservation(req, res, next) {
       )}`,
     });
 
-    req.log.trace({ __filename, methodName, valid: false, missing: errors });
+    req.log.debug({ __filename, methodName, valid: false, missing: errors });
   }
 
   res.locals.reservation = req.body.data;
@@ -93,7 +108,7 @@ function isNotTuesday(req, res, next) {
       message: `The restaurant is closed on Tuesdays. Please choose a different day.`,
     });
 
-    req.log.trace({
+    req.log.debug({
       __filename,
       methodName,
       valid: false,
@@ -119,13 +134,13 @@ function isFutureDate(req, res, next) {
   const formattedDate = formatDate(today);
   req.log.trace({ __filename, methodName: "formatDate", formattedDate });
 
-  if (compare(reservation_date, formattedDate) !== 1) {
+  if (!compare(reservation_date, formattedDate)) {
     next({
       status: 400,
       message: `The reservation must be on a future date.`,
     });
 
-    req.log.trace({
+    req.log.debug({
       __filename,
       methodName,
       valid: false,
@@ -151,13 +166,13 @@ function isValidTime(req, res, next) {
   const formattedTIme = toMinutes(reservation_time);
   req.log.trace({ __filename, methodName: "toMinutes", formattedTIme });
 
-  if (givenTime < lower || givenTime > upper) {
+  if (formattedTIme < lower || formattedTIme > upper) {
     next({
       status: 400,
       message: `The reservation time must be between 10:30 - 21:30. Your time: ${reservation_time}`,
     });
 
-    req.log.trace({
+    req.log.debug({
       __filename,
       methodName,
       valid: false,
@@ -166,6 +181,39 @@ function isValidTime(req, res, next) {
   }
 
   next();
+}
+
+/**
+ * Queries DB to retrieve
+ * reservation by reservation_id
+ * ---
+ * If exists, proceed to "read" and respond
+ * else, respond with error not found
+ */
+async function reservationExists(req, res, next) {
+  const methodName = "reservationExists";
+  req.log.debug({ __filename, methodName });
+
+  const { reservation_id } = req.params;
+
+  const reservation = await service.read(reservation_id);
+
+  if (await reservation) {
+    res.locals.reservation = reservation;
+    next();
+  } else {
+    next({
+      status: 404,
+      message: `Reservation ${reservation_id} not found.`,
+    });
+
+    req.log.debug({
+      __filename,
+      methodName,
+      valid: false,
+      reason: `Reservation ${reservation_id} not found.`,
+    });
+  }
 }
 // #endregion
 
@@ -217,4 +265,5 @@ module.exports = {
     isValidTime,
     asyncErrorBoundary(create),
   ],
+  read: [asyncErrorBoundary(reservationExists), read],
 };

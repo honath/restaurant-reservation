@@ -27,7 +27,7 @@ You can access a working prototype of the React app here: https://restaurant-res
 - I only want to allow reservations to be created during business hours, up to 60 minutes before closing
 - so that users do not accidentally create a reservation for a time we cannot accommodate.
 
-##### US-04 Seat reservation (Importance - High)
+##### US-04 Seat reservation (Importance - High) (Est. 6 hr)
 
 - As a restaurant manager,
 - When a customer with an existing reservation arrives at the restaurant
@@ -76,9 +76,11 @@ The app's functionality includes:
 
 ### 5. Wireframes
 
-|       Dashboard (desktop) path: /dashboard       | New Reservation Form (desktop) path: /reservations/new  |      Add Table Form (desktop) path: /tables/new       |
-| :----------------------------------------------: | :-----------------------------------------------------: | :---------------------------------------------------: |
-| <img src="./resources/wireframes/Dashboard.svg"> | <img src="./resources/wireframes/Reservation-Form.svg"> | <img src="./resources/wireframes/Add-Table-Form.svg"> |
+|             Dashboard (desktop) path: /dashboard              | New Reservation Form (desktop) path: /reservations/new  |      Add Table Form (desktop) path: /tables/new       |
+| :-----------------------------------------------------------: | :-----------------------------------------------------: | :---------------------------------------------------: |
+|       <img src="./resources/wireframes/Dashboard.svg">        | <img src="./resources/wireframes/Reservation-Form.svg"> | <img src="./resources/wireframes/Add-Table-Form.svg"> |
+| Seat Table (desktop) path: /reservations/:reservation_id/seat |                                                         |                                                       |
+|       <img src="./resources/wireframes/Seat-Table.svg">       |                                                         |                                                       |
 
 ### 6. Front-end Structure - React Components Map
 
@@ -89,14 +91,18 @@ The app's functionality includes:
       - **Routes.js** (stateless) - routing file for URLs
         - **Dashboard.js** (stateless)
           - **Reservations.js** (stateful) - gets _reservations_ and _date_ from Dashboard
+          - **Tables.js** (stateful) - gets _tables_ from Dashboard
         - **NewReservation.js** (stateless)
           - **NewResForm.js** (stateful) - gets _formData_, _setFormData_, _setDateError_, _setFormError_, and today's date from NewReservation.js
+        - **NewTable.js** (stateless)
+          - **NewTableForm.js** (stateful) - gets _formData_, _setFormData_, _setFormError_ from NewTable.js
       - **ErrorAlert.js** (stateful) - Displays error alert when an error is present
       - **NotFound.js** (stateless) 404 Not Found
 
 ### 7. Back-end Structure - Business Objects
 
 - Reservations (database table)
+
   - reservation_id (auto-generated)
   - first_name
   - last_name
@@ -104,6 +110,13 @@ The app's functionality includes:
   - reservation_date (formatted YYYY-MM-DD)
   - reservation_time (formatted HH-MM 24hr time)
   - people
+  - created/updated_at timestamps
+
+- Tables (database table)
+  - table_id (auto-generated)
+  - reservation_id (foreign ID from "reservations", controls table occupied status and seating)
+  - table_name
+  - capacity
   - created/updated_at timestamps
 
 ### 8. API Documentation
@@ -114,6 +127,11 @@ The app's functionality includes:
     /
     .
     ├── /reservations
+    │   └── GET
+    │       |
+    |       POST
+    |
+    ├── /tables
     │   └── GET
     │       |
     |       POST
@@ -161,6 +179,44 @@ The app's functionality includes:
             "reservation_date": "2020-01-20",
             "reservation_time": "14:30",
             "people": 5,
+            "created_at": "2020-12-10 03:30:32"
+            "updated_at": "2020-12-10 03:30:32"
+        }
+    }
+```
+
+##### GET `/tables`
+
+```js
+    // res.body
+    // array containing:
+    {
+        "table_id": 2,
+        "table_name": "Bar #3",
+        "capacity": 1,
+        "reservation_id": 1,
+        "created_at": "2020-12-10 03:30:32"
+        "updated_at": "2020-12-10 03:30:32"
+    }
+```
+
+##### POST `/tables`
+
+```js
+    // req.body
+    {
+        "table_name": "Bar #3",
+        "capacity": 1,
+    }
+
+    // res.body
+    {
+        "status": 201,
+        "data": {
+            "table_id": 2,
+            "table_name": "Bar #3",
+            "capacity": 1,
+            "reservation_id": 1,
             "created_at": "2020-12-10 03:30:32"
             "updated_at": "2020-12-10 03:30:32"
         }

@@ -16,7 +16,7 @@ async function list(req, res) {
 
   const tables = await service.list();
 
-  res.status(200).json(await tables);
+  res.status(200).json({ data: await tables });
 }
 
 /**
@@ -31,7 +31,7 @@ async function create(req, res) {
 
   const newTable = await service.create(table);
 
-  res.status(201).json(await newTable);
+  res.status(201).json({ data: await newTable[0] });
 }
 
 /**
@@ -61,14 +61,12 @@ function validateTable(req, res, next) {
   const methodName = "validateTable";
   req.log.debug({ __filename, methodName });
 
-  const {
-    data: { table_name, capacity },
-  } = req.body;
+  const { data: { table_name, capacity } = {} } = req.body;
 
   const errors = [];
 
-  if (!table_name) errors.push("Table Name");
-  if (!capacity) errors.push("Table Capacity");
+  if (!table_name || table_name.length < 2) errors.push("table_name");
+  if (!capacity) errors.push("capacity");
 
   if (errors.length) {
     next({
@@ -159,16 +157,16 @@ function tableIsEmpty(req, res, next) {
 
   if (table.reservation_id) {
     next({
-        status: 400,
-        message: `Table ${table_id} is currently occupied.`,
-      });
-  
-      req.log.debug({
-        __filename,
-        methodName,
-        valid: false,
-        reason: `Table ${table_id} is currently occupied.`,
-      });
+      status: 400,
+      message: `Table ${table_id} is currently occupied.`,
+    });
+
+    req.log.debug({
+      __filename,
+      methodName,
+      valid: false,
+      reason: `Table ${table_id} is currently occupied.`,
+    });
   }
 
   next();
@@ -232,6 +230,33 @@ function tableFits(req, res, next) {
 
   next();
 }
+
+/**
+ * Verifies that PUT request
+ * has relevant data;
+ */
+function hasData(req, res, next) {
+  const methodName = "hasData";
+  req.log.debug({ __filename, methodName });
+
+  const { data: { reservation_id } = {} } = req.body;
+
+  if (!reservation_id) {
+    next({
+      status: 400,
+      message: `Request body must have reservation_id`,
+    });
+
+    req.log.trace({
+      __filename,
+      methodName,
+      valid: false,
+      missing: "reservation_id",
+    });
+  }
+
+  next();
+}
 // #endregion
 
 // #region ============= Helper Functions ================
@@ -242,6 +267,7 @@ module.exports = {
   list: asyncErrorBoundary(list),
   create: [validateTable, validateCapacity, asyncErrorBoundary(create)],
   update: [
+    hasData,
     asyncErrorBoundary(tableExists),
     tableIsEmpty,
     asyncErrorBoundary(reservationExists),

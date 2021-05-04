@@ -10,9 +10,13 @@ async function list(req, res) {
   const methodName = "list";
   req.log.debug({ __filename, methodName });
 
-  const reservations = await service.list();
+  const { date } = req.query;
 
-  res.status(200).json(await reservations);
+  const reservations = date
+    ? await service.listWithDate(date)
+    : await service.list();
+
+  res.status(200).send({ data: await reservations });
 }
 
 /**
@@ -27,7 +31,7 @@ async function create(req, res) {
 
   const newReservation = await service.create(reservation);
 
-  res.status(201).json(await newReservation);
+  res.status(201).json({ data: await newReservation[0] });
 }
 
 /**
@@ -41,7 +45,7 @@ function read(req, res) {
 
   const { reservation } = res.locals;
 
-  res.status(200).json(reservation);
+  res.status(200).json({ data: reservation });
 }
 // #endregion
 
@@ -62,22 +66,24 @@ function validateReservation(req, res, next) {
       reservation_date,
       reservation_time,
       people,
-    },
+    } = {},
   } = req.body;
 
   const errors = [];
 
-  if (!first_name) errors.push("First Name");
-  if (!last_name) errors.push("Last Name");
-  if (!mobile_number) errors.push("Phone Number");
-  if (!reservation_date) errors.push("Date");
-  if (!reservation_time) errors.push("Time");
-  if (!people) errors.push("Party Size");
+  if (!first_name) errors.push("first_name");
+  if (!last_name) errors.push("last_name");
+  if (!mobile_number) errors.push("mobile_number");
+  if (!reservation_date || !isDate(reservation_date))
+    errors.push("reservation_date");
+  if (!reservation_time || !isTime(reservation_time))
+    errors.push("reservation_time");
+  if (!people || typeof people !== "number") errors.push("people");
 
   if (errors.length) {
     next({
       status: 400,
-      message: `The following required fields are missing: ${errors.join(
+      message: `The following required fields are missing or invalid: ${errors.join(
         ", "
       )}`,
     });
@@ -134,7 +140,11 @@ function isFutureDate(req, res, next) {
   const formattedDate = formatDate(today);
   req.log.trace({ __filename, methodName: "formatDate", formattedDate });
 
-  if (!compare(reservation_date, formattedDate)) {
+  const testDates = !!compare(reservation_date, formattedDate);
+
+  //next({ status: 400, message: testDates });
+
+  if (!testDates) {
     next({
       status: 400,
       message: `The reservation must be on a future date.`,
@@ -218,6 +228,31 @@ async function reservationExists(req, res, next) {
 // #endregion
 
 // #region ============= Helper Functions ================
+function isDate(date) {
+  const regex = /[0-9\-]/g;
+  date = date.match(regex);
+
+  if (date) {
+    date = date.join([]);
+
+    if (date.length !== 10) return false;
+    else return true;
+  } else return false;
+}
+
+function isTime(time) {
+  const regex = /[0-9\:]/g;
+
+  time = time.match(regex);
+
+  if (time) {
+    time = time.join([]);
+
+    if (time.length !== 5) return false;
+    else return true;
+  } else return false;
+}
+
 function formatDate(date) {
   const month = date.getUTCMonth() + 1;
   const day = date.getUTCDate();
@@ -230,22 +265,13 @@ function compare(first, sec) {
   const firstDate = first.split("-");
   const secDate = sec.split("-");
 
-  /**
-   * Check by year first [0]
-   * if needed, check by month [1]
-   * finally, check by day [2]
-   * if exact match, return 0
-   */
-  if (firstDate[0] > secDate[0]) return 1;
-  else if (firstDate[0] < secDate[0]) return -1;
-  else {
-    if (firstDate[1] > secDate[1]) return 1;
-    else if (firstDate[1] < secDate[1]) return -1;
-    else {
-      if (firstDate[2] > secDate[2]) return 1;
-      else if (firstDate[2] < secDate[2]) return -1;
-      else return 0;
-    }
+  for (let i = 0; i < 3; i++) {
+    if (parseInt(firstDate[i]) === parseInt(secDate[i])) {
+      if (i == 2) return 0;
+      else continue;
+    } else if (parseInt(firstDate[i]) > parseInt(secDate[i])) return 1;
+    else if (parseInt(firstDate[i]) > parseInt(secDate[i])) return -1;
+    else return 0;
   }
 }
 
@@ -260,8 +286,8 @@ module.exports = {
   list: asyncErrorBoundary(list),
   create: [
     validateReservation,
-    isNotTuesday,
     isFutureDate,
+    isNotTuesday,
     isValidTime,
     asyncErrorBoundary(create),
   ],

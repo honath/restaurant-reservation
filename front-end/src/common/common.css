@@ -19,6 +19,12 @@ header {
   height: 8rem;
 }
 
+/* Table */
+.table-row {
+  line-height: 2rem;
+  height: 2rem;
+}
+
 /* Custom background colors & btn colors*/
 .btn {
   border-color: transparent;

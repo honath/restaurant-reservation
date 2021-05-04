@@ -48,7 +48,23 @@ async function update(req, res) {
 
   const seatReservation = await service.update(table_id, reservation_id);
 
-  res.status(200).json({data: await seatReservation});
+  res.status(200).json({ data: await seatReservation });
+}
+
+/**
+ * Removes foreign reservation_id for
+ * matching table by table_id
+ * @returns {Status} 200 for unseated table
+ */
+async function destroy(req, res) {
+  const methodName = "destroy";
+  req.log.debug({ __filename, methodName });
+
+  const { table_id } = req.params;
+
+  await service.destroy(table_id);
+
+  res.sendStatus(200);
 }
 // #endregion
 
@@ -158,14 +174,43 @@ function tableIsEmpty(req, res, next) {
   if (table.reservation_id) {
     next({
       status: 400,
-      message: `Table ${table_id} is currently occupied.`,
+      message: `Table ${table_id} is currently occupied!`,
     });
 
     req.log.debug({
       __filename,
       methodName,
       valid: false,
-      reason: `Table ${table_id} is currently occupied.`,
+      reason: `Table ${table_id} is currently occupied!`,
+    });
+  }
+
+  next();
+}
+
+/**
+ * Opposite of tableIsEmpty
+ * Checks for already occupied table
+ * for DELETE request
+ */
+function tableIsOccupied(req, res, next) {
+  const methodName = "tableIsOccupied";
+  req.log.debug({ __filename, methodName });
+
+  const { table_id } = req.params;
+  const { table } = res.locals;
+
+  if (table.reservation_id === null) {
+    next({
+      status: 400,
+      message: `Table ${table_id} is not occupied.`,
+    });
+
+    req.log.debug({
+      __filename,
+      methodName,
+      valid: false,
+      reason: `Table ${table_id} is not occupied.`,
     });
   }
 
@@ -274,4 +319,5 @@ module.exports = {
     tableFits,
     asyncErrorBoundary(update),
   ],
+  destroy: [asyncErrorBoundary(tableExists), tableIsOccupied, destroy],
 };

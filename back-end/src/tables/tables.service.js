@@ -19,9 +19,17 @@ function update(table_id, reservation_id) {
     .returning("*");
 }
 
+function destroy(table_id) {
+  return knex("tables")
+    .where({ table_id: table_id })
+    .update({ "reservation_id": null })
+    .returning("*");
+}
+
 module.exports = {
   list,
   create,
   read,
   update,
+  destroy
 };

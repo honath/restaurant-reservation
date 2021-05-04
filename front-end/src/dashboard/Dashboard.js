@@ -23,12 +23,14 @@ function Dashboard({ date }) {
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
 
+  const [reload, setReload] = useState(false);
+
   const query = useQuery().get("date");
   const today = date;
   if (query) date = query;
 
   useEffect(loadReservations, [date]);
-  useEffect(loadTables, [date]);
+  useEffect(loadTables, [date, reload]);
 
   function loadReservations() {
     setReservationsError(null);
@@ -58,7 +60,7 @@ function Dashboard({ date }) {
           <ErrorAlert error={reservationsError} />
         </section>
         <section className="col-3 m-0">
-          <Tables tables={tables}/>
+          <Tables tables={tables} reload={reload} setReload={setReload}/>
           <ErrorAlert error={tablesError} />
         </section>
       </main>

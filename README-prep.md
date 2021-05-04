@@ -27,14 +27,14 @@ You can access a working prototype of the React app here: https://restaurant-res
 - I only want to allow reservations to be created during business hours, up to 60 minutes before closing
 - so that users do not accidentally create a reservation for a time we cannot accommodate.
 
-##### US-04 Seat reservation (Importance - High) (Est. 8 hr)
+##### US-04 Seat reservation (Importance - High) (Est. 8 hrs)
 
 - As a restaurant manager,
 - When a customer with an existing reservation arrives at the restaurant
 - I want to seat (assign) their reservation to a specific table
 - so that I know which tables are occupied and free.
 
-##### US-05 Finish an occupied table (Importance - High)
+##### US-05 Finish an occupied table (Importance - High) (Est. 1 hr)
 
 - As a restaurant manager
 - I want to free up an occupied table when the guests leave
@@ -91,7 +91,7 @@ The app's functionality includes:
       - **Routes.js** (stateless) - routing file for URLs
         - **Dashboard.js** (stateless)
           - **Reservations.js** (stateful) - gets _reservations_ and _date_ from Dashboard
-          - **Tables.js** (stateful) - gets _tables_ from Dashboard
+          - **Tables.js** (stateful) - gets _tables_, _reload_, _setReload_ from Dashboard
         - **NewReservation.js** (stateless)
           - **NewResForm.js** (stateful) - gets _formData_, _setFormData_, _setDateError_, _setFormError_, and today's date from NewReservation.js
         - **NewTable.js** (stateless)
@@ -144,6 +144,8 @@ The app's functionality includes:
     |
     ├── /tables/:table_id/seat
     │   └── PUT
+    │       |
+    |       DELETE
 ```
 
 ##### GET `/reservations`
@@ -268,6 +270,15 @@ The app's functionality includes:
             "created_at": "2020-12-10 03:30:32"
             "updated_at": "2020-12-10 03:30:32"
         }
+    }
+```
+
+##### DELETE `/tables/:table_id/seat`
+
+```js
+    // res.body
+    {
+        "status": 200
     }
 ```
 

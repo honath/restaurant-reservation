@@ -3,19 +3,43 @@ import { Link } from "react-router-dom";
 import { sortTables } from "../common/sortTables";
 
 import "../common/common.css";
+import { finishTable } from "../utils/api";
 
-function Tables({ tables }) {
+function Tables({ tables, reload, setReload }) {
   /* Sort tables by name */
   const sortedTables = sortTables(tables);
+
+  async function handleFinishClick({ target }) {
+    const table_id = target.id;
+    const message = `Is this table ready to seat new guests? This cannot be undone.`;
+
+    if (window.confirm(message)) {
+      await finishTable(table_id)
+        .then(() => setReload(!reload))
+        .catch(() => setReload(!reload));
+    }
+  }
 
   /* Format tables as table rows */
   const mapTables = sortedTables.map((tbl) => {
     return (
-      <tr key={tbl.table_id}>
+      <tr className="table-row" key={tbl.table_id}>
         <td className="text-center">{tbl.table_name}</td>
         <td className="text-center">{tbl.capacity}</td>
         <td className="text-center" data-table-id-status={tbl.table_id}>
           {tbl.reservation_id === null ? "Free" : "Occupied"}
+        </td>
+        <td>
+          {tbl.reservation_id === null ? null : (
+            <button
+              className="text-center btn btn-secondary"
+              data-table-id-finish={tbl.table_id}
+              id={tbl.table_id}
+              onClick={handleFinishClick}
+            >
+              Finish
+            </button>
+          )}
         </td>
       </tr>
     );
@@ -31,6 +55,7 @@ function Tables({ tables }) {
               <th className="text-center">Table</th>
               <th className="text-center">Capacity</th>
               <th className="text-center">Status</th>
+              <th className="text-center">Actions</th>
             </tr>
           </thead>
           <tbody>{mapTables}</tbody>

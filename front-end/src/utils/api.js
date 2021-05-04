@@ -175,4 +175,27 @@ export function seatTable(table_id, reservation_id) {
       return Promise.reject({ status, message: error });
     });
 }
+
+/**
+ * Takes in table ID and
+ * "unseats" reservation from
+ * table (delete reservation_id)
+ * @param {Integer} table_id 
+ * @returns {Promise}
+ */
+export function finishTable(table_id) {
+  const url = `${API_BASE_URL}/tables/${table_id}/seat`;
+
+  const config = { headers };
+
+  return axios
+    .delete(url, { config })
+    .then()
+    .catch(({ response }) => {
+      const { status } = response;
+      const { error } = response.data;
+
+      return Promise.reject({ status, message: error });
+    });
+}
 // #endregion Tables

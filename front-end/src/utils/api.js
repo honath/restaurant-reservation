@@ -30,6 +30,7 @@ export async function listReservations(source) {
 
   return axios
     .get(url, { config })
+    .then(({ data }) => data)
     .then(({ data }) => {
       /**
        * Converts date and time into
@@ -45,7 +46,12 @@ export async function listReservations(source) {
 
       return data;
     })
-    .catch((err) => Promise.reject({ message: err.message }));
+    .catch(({ response }) => {
+      const { status } = response;
+      const { error } = response.data;
+
+      return Promise.reject({ status, message: error });
+    });
 }
 
 /**
@@ -65,12 +71,12 @@ export function readReservation(reservation_id, source) {
 
   return axios
     .get(url, { config })
-    .then()
-    .catch((err) => {
-      return Promise.reject({
-        status: err.status,
-        message: err.data.message,
-      });
+    .then((res) => res.data.data)
+    .catch(({ response }) => {
+      const { status } = response;
+      const { error } = response.data;
+
+      return Promise.reject({ status, message: error });
     });
 }
 
@@ -87,12 +93,12 @@ export function createReservation(reservation) {
 
   return axios
     .post(url, { data: reservation }, { config })
-    .then(({ data }) => data[0])
-    .catch((err) => {
-      return Promise.reject({
-        status: err.status,
-        message: err.data.message,
-      });
+    .then((res) => res.data.data)
+    .catch(({ response }) => {
+      const { status } = response;
+      const { error } = response.data;
+
+      return Promise.reject({ status, message: error });
     });
 }
 // #endregion Reservations
@@ -113,12 +119,12 @@ export function listTables(source) {
 
   return axios
     .get(url, { config })
-    .then()
-    .catch((err) => {
-      return Promise.reject({
-        status: err.status,
-        message: err.data.message,
-      });
+    .then((res) => res.data.data)
+    .catch(({ response }) => {
+      const { status } = response;
+      const { error } = response.data;
+
+      return Promise.reject({ status, message: error });
     });
 }
 
@@ -135,12 +141,12 @@ export function createTable(table) {
 
   return axios
     .post(url, { data: table }, { config })
-    .then(({ data }) => data[0])
-    .catch((err) => {
-      return Promise.reject({
-        status: err.status,
-        message: err.data.message,
-      });
+    .then((res) => res.data.data)
+    .catch(({ response }) => {
+      const { status } = response;
+      const { error } = response.data;
+
+      return Promise.reject({ status, message: error });
     });
 }
 
@@ -161,12 +167,12 @@ export function seatTable(table_id, reservation_id) {
 
   return axios
     .put(url, { data: { reservation_id } }, { config })
-    .then(({ data }) => data[0])
-    .catch((err) => {
-      return Promise.reject({
-        status: err.status,
-        message: err.data.message,
-      });
+    .then((res) => res.data.data)
+    .catch(({ response }) => {
+      const { status } = response;
+      const { error } = response.data;
+
+      return Promise.reject({ status, message: error });
     });
 }
 // #endregion Tables

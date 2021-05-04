@@ -27,7 +27,7 @@ You can access a working prototype of the React app here: https://restaurant-res
 - I only want to allow reservations to be created during business hours, up to 60 minutes before closing
 - so that users do not accidentally create a reservation for a time we cannot accommodate.
 
-##### US-04 Seat reservation (Importance - High) (Est. 6 hr)
+##### US-04 Seat reservation (Importance - High) (Est. 8 hr)
 
 - As a restaurant manager,
 - When a customer with an existing reservation arrives at the restaurant
@@ -96,6 +96,9 @@ The app's functionality includes:
           - **NewResForm.js** (stateful) - gets _formData_, _setFormData_, _setDateError_, _setFormError_, and today's date from NewReservation.js
         - **NewTable.js** (stateless)
           - **NewTableForm.js** (stateful) - gets _formData_, _setFormData_, _setFormError_ from NewTable.js
+        - **SeatTable.js** (stateless)
+          - **ReservationCard.js** (stateful) - gets _reservation_ from SeatTable.js - displays as Bootstrap card
+          - **SeatTableForm.js** (stateful) - gets _tables_, _reservation_, _selection_, _setSelection_, and _setSeatError_ from SeatTable.js
       - **ErrorAlert.js** (stateful) - Displays error alert when an error is present
       - **NotFound.js** (stateless) 404 Not Found
 
@@ -131,10 +134,16 @@ The app's functionality includes:
     │       |
     |       POST
     |
+    ├── /reservations/:reservation_id
+    │   └── GET
+    |
     ├── /tables
     │   └── GET
     │       |
     |       POST
+    |
+    ├── /tables/:table_id/seat
+    │   └── PUT
 ```
 
 ##### GET `/reservations`
@@ -185,6 +194,23 @@ The app's functionality includes:
     }
 ```
 
+##### GET `/reservations/:reservation_id`
+
+```js
+    // res.body
+    {
+        "reservation_id": 1,
+        "first_name": "John",
+        "last_name": "Smith",
+        "mobile_number": 1234567890,
+        "reservation_date": "2020-01-20",
+        "reservation_time": "14:30",
+        "people": 5,
+        "created_at": "2020-12-10 03:30:32"
+        "updated_at": "2020-12-10 03:30:32"
+    }
+```
+
 ##### GET `/tables`
 
 ```js
@@ -212,6 +238,28 @@ The app's functionality includes:
     // res.body
     {
         "status": 201,
+        "data": {
+            "table_id": 2,
+            "table_name": "Bar #3",
+            "capacity": 1,
+            "reservation_id": null,
+            "created_at": "2020-12-10 03:30:32"
+            "updated_at": "2020-12-10 03:30:32"
+        }
+    }
+```
+
+##### PUT `/tables/:table_id/seat`
+
+```js
+    // req.body
+    {
+        "reservation_id": 1
+    }
+
+    // res.body
+    {
+        "status": 200,
         "data": {
             "table_id": 2,
             "table_name": "Bar #3",

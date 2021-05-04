@@ -48,7 +48,7 @@ async function update(req, res) {
 
   const seatReservation = await service.update(table_id, reservation_id);
 
-  res.status(200).json(await seatReservation);
+  res.status(200).json({data: await seatReservation});
 }
 // #endregion
 

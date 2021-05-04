@@ -34,10 +34,16 @@ function NewResForm({
     const name = target.name;
     const value = target.value;
 
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    if (name === "people")
+      setFormData({
+        ...formData,
+        [name]: parseInt(value),
+      });
+    else
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
   }
 
   async function handleSubmit(event) {
@@ -57,7 +63,6 @@ function NewResForm({
     else
       await createReservation(formData)
         .then((res) => {
-          console.log(res)
           history.push(`/dashboard?date=${date}`)
         })
         .catch(setFormError);

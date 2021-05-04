@@ -16,7 +16,7 @@ async function list(req, res) {
     ? await service.listWithDate(date)
     : await service.list();
 
-  res.status(200).send({ data: await reservations });
+  res.status(200).json({ data: await reservations });
 }
 
 /**

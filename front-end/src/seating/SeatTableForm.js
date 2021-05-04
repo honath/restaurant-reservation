@@ -22,14 +22,12 @@ function SeatTableForm({
   /* Format tables as table rows */
   const mapTables = [];
   sortedTables.forEach((tbl, index) => {
-    if (!tbl.reservation_id) {
-      const { table_id } = tbl;
-      mapTables.push(
-        <option key={index} name={table_id} value={table_id}>
-          {tbl.table_name} - {tbl.capacity}
-        </option>
-      );
-    }
+    const { table_id } = tbl;
+    mapTables.push(
+      <option key={index} value={table_id}>
+        {tbl.table_name} - {tbl.capacity}
+      </option>
+    );
   });
 
   function handleChange({ target }) {
@@ -79,14 +77,15 @@ function SeatTableForm({
           <div className="form-row mb-4">
             <div className="m-3">
               <label htmlFor="select_table" className="form-label mb-0">
-                Select a Table
+                Table number:
               </label>
               <select
                 className="custom-select"
-                name="select_table"
+                name="table_id"
                 aria-label="Select a table to seat"
                 value={selection}
                 onChange={handleChange}
+                required={true}
               >
                 {mapTables}
               </select>

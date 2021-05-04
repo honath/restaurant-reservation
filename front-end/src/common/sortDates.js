@@ -13,7 +13,7 @@ export function compare(first, sec) {
 
   for (let i = 0; i < 3; i++) {
     if (parseInt(firstDate[i]) === parseInt(secDate[i])) {
-      if (i == 2) return 0;
+      if (i === 2) return 0;
       else continue;
     } else if (parseInt(firstDate[i]) > parseInt(secDate[i])) return 1;
     else if (parseInt(firstDate[i]) > parseInt(secDate[i])) return -1;

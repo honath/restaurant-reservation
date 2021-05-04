@@ -22,7 +22,7 @@ function SeatTable() {
     let source = axios.CancelToken.source();
 
     listTables(source)
-      .then((res) => setTables(res.data))
+      .then(setTables)
       .catch(setSeatError);
 
     return () => source.cancel();
@@ -32,7 +32,7 @@ function SeatTable() {
     let source = axios.CancelToken.source();
 
     readReservation(reservation_id, source)
-      .then((res) => setReservation(res.data))
+      .then(setReservation)
       .catch(setSeatError);
 
     return () => source.cancel();

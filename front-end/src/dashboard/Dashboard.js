@@ -43,7 +43,7 @@ function Dashboard({ date }) {
     setTablesError(null);
     let source = axios.CancelToken.source();
 
-    listTables(source).then(res => setTables(res.data)).catch(setTablesError);
+    listTables(source).then(setTables).catch(setTablesError);
 
     return () => source.cancel();
   }

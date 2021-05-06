@@ -61,8 +61,9 @@ async function destroy(req, res) {
   req.log.debug({ __filename, methodName });
 
   const { table_id } = req.params;
+  const { reservation_id } = res.locals.table;
 
-  await service.destroy(table_id);
+  await service.destroy(table_id,reservation_id);
 
   res.sendStatus(200);
 }
@@ -246,6 +247,29 @@ async function reservationExists(req, res, next) {
   }
 }
 
+function isNotSeated(req, res, next) {
+  const methodName = "isNotSeated";
+  req.log.debug({ __filename, methodName });
+
+  const { reservation_id, status } = res.locals.reservation;
+
+  if (status !== "seated") {
+    next();
+  } else {
+    next({
+      status: 400,
+      message: `Reservation ${reservation_id} is already seated!`,
+    });
+
+    req.log.debug({
+      __filename,
+      methodName,
+      valid: false,
+      reason: `Reservation ${reservation_id} is already seated!`,
+    });
+  }
+}
+
 /**
  * Checks if requested table
  * will fit requested
@@ -316,6 +340,7 @@ module.exports = {
     asyncErrorBoundary(tableExists),
     tableIsEmpty,
     asyncErrorBoundary(reservationExists),
+    isNotSeated,
     tableFits,
     asyncErrorBoundary(update),
   ],

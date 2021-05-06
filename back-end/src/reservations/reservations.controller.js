@@ -47,6 +47,24 @@ function read(req, res) {
 
   res.status(200).json({ data: reservation });
 }
+
+/**
+ * Updates status column for
+ * reservation by ID
+ * @returns {Object} Updated reservation from table
+ */
+async function updateStatus(req, res) {
+  const methodName = "updateStatus";
+  req.log.debug({ __filename, methodName });
+
+  const { reservation_id } = req.params;
+  const { status } = res.locals;
+
+  const updatedReservation = await service.updateStatus(reservation_id, status);
+  const updatedStatus = await updatedReservation[0].status;
+
+  res.status(200).json({ data: { status: await updatedStatus } });
+}
 // #endregion
 
 // #region ============= Validation ======================
@@ -225,6 +243,89 @@ async function reservationExists(req, res, next) {
     });
   }
 }
+
+/**
+ * For POST request
+ * Checks status in request body
+ * for invalid statuses
+ */
+function isInvalidStatus(req, res, next) {
+  const methodName = "isValidStatus";
+  req.log.debug({ __filename, methodName });
+
+  const { status } = res.locals.reservation;
+  const invalidStatuses = ["seated", "finished"];
+
+  if (invalidStatuses.includes(status)) {
+    next({
+      status: 400,
+      message: `${status} is not a valid reservation status!`,
+    });
+
+    req.log.debug({
+      __filename,
+      methodName,
+      valid: false,
+      reason: `${status} is not a valid reservation status!`,
+    });
+  } else next();
+}
+
+/**
+ * For PUT request
+ * Checks status in request body
+ * for valid statuses
+ */
+function isValidStatus(req, res, next) {
+  const methodName = "isValidStatus";
+  req.log.debug({ __filename, methodName });
+
+  const { data: { status } = {} } = req.body;
+  const validStatuses = ["booked", "seated", "finished"];
+
+  if (validStatuses.includes(status)) {
+    res.locals.status = status;
+    next();
+  } else {
+    next({
+      status: 400,
+      message: `${status} is not a valid reservation status!`,
+    });
+
+    req.log.debug({
+      __filename,
+      methodName,
+      valid: false,
+      reason: `${status} is not a valid reservation status!`,
+    });
+  }
+}
+
+/**
+ * For PUT request
+ * Checks reservation is
+ * not already finished
+ */
+function statusNotFinished(req, res, next) {
+  const methodName = "statusNotFinished";
+  req.log.debug({ __filename, methodName });
+
+  const { reservation_id, status } = res.locals.reservation;
+
+  if (status === "finished") {
+    next({
+      status: 400,
+      message: `Reservation ${reservation_id} is already finished.`,
+    });
+
+    req.log.debug({
+      __filename,
+      methodName,
+      valid: false,
+      reason: `Reservation ${reservation_id} is already finished.`,
+    });
+  } else next();
+}
 // #endregion
 
 // #region ============= Helper Functions ================
@@ -286,10 +387,17 @@ module.exports = {
   list: asyncErrorBoundary(list),
   create: [
     validateReservation,
+    isInvalidStatus,
     isFutureDate,
     isNotTuesday,
     isValidTime,
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(reservationExists), read],
+  updateStatus: [
+    asyncErrorBoundary(reservationExists),
+    statusNotFinished,
+    isValidStatus,
+    updateStatus,
+  ],
 };

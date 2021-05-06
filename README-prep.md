@@ -40,7 +40,7 @@ You can access a working prototype of the React app here: https://restaurant-res
 - I want to free up an occupied table when the guests leave
 - so that I can seat new guests at that table.
 
-##### US-06 Reservation Status (Importance - Medium)
+##### US-06 Reservation Status (Importance - Medium) (Est. 3 hrs)
 
 - As a restaurant manager
 - I want a reservation to have a status of either booked, seated, or finished
@@ -90,8 +90,9 @@ The app's functionality includes:
       - **Menu.js** (stateless) - Navigation sidebar
       - **Routes.js** (stateless) - routing file for URLs
         - **Dashboard.js** (stateless)
-          - **Reservations.js** (stateful) - gets _reservations_ and _date_ from Dashboard
-          - **Tables.js** (stateful) - gets _tables_, _reload_, _setReload_ from Dashboard
+          - **Reservations.js** (stateful) - gets _reservations_ and _date_ from Dashboard.js
+            - **ReservationRows.js** (stateful) - gets _sortedReservations_ and _date_ from Reservations.js
+          - **Tables.js** (stateful) - gets _tables_, _reload_, _setReload_ from Dashboard.js
         - **NewReservation.js** (stateless)
           - **NewResForm.js** (stateful) - gets _formData_, _setFormData_, _setDateError_, _setFormError_, and today's date from NewReservation.js
         - **NewTable.js** (stateless)
@@ -113,6 +114,7 @@ The app's functionality includes:
   - reservation_date (formatted YYYY-MM-DD)
   - reservation_time (formatted HH-MM 24hr time)
   - people
+  - status (booked, seated, finished)
   - created/updated_at timestamps
 
 - Tables (database table)
@@ -137,6 +139,9 @@ The app's functionality includes:
     ├── /reservations/:reservation_id
     │   └── GET
     |
+    ├── /reservations/:reservation_id/status
+    │   └── PUT
+    |
     ├── /tables
     │   └── GET
     │       |
@@ -151,7 +156,7 @@ The app's functionality includes:
 ##### GET `/reservations`
 
 ```js
-    // res.body
+    // res.body.data
     // array containing:
     {
         "reservation_id": 1,
@@ -161,6 +166,7 @@ The app's functionality includes:
         "reservation_date": "2020-01-20",
         "reservation_time": "14:30",
         "people": 5,
+        "status": "booked",
         "created_at": "2020-12-10 03:30:32"
         "updated_at": "2020-12-10 03:30:32"
     }
@@ -169,7 +175,7 @@ The app's functionality includes:
 ##### POST `/reservations`
 
 ```js
-    // req.body
+    // req.body.data
     {
         "first_name": "John",
         "last_name": "Smith",
@@ -179,7 +185,7 @@ The app's functionality includes:
         "people": 5,
     }
 
-    // res.body
+    // res.body.data
     {
         "status": 201,
         "data": {
@@ -190,6 +196,7 @@ The app's functionality includes:
             "reservation_date": "2020-01-20",
             "reservation_time": "14:30",
             "people": 5,
+            "status": "booked",
             "created_at": "2020-12-10 03:30:32"
             "updated_at": "2020-12-10 03:30:32"
         }
@@ -199,7 +206,7 @@ The app's functionality includes:
 ##### GET `/reservations/:reservation_id`
 
 ```js
-    // res.body
+    // res.body.data
     {
         "reservation_id": 1,
         "first_name": "John",
@@ -208,6 +215,30 @@ The app's functionality includes:
         "reservation_date": "2020-01-20",
         "reservation_time": "14:30",
         "people": 5,
+        "status": "booked",
+        "created_at": "2020-12-10 03:30:32"
+        "updated_at": "2020-12-10 03:30:32"
+    }
+```
+
+##### PUT `/reservations/:reservation_id/status`
+
+```js
+    // req.body.data
+    {
+        "status": "seated"
+    }
+
+    // res.body.data
+    {
+        "reservation_id": 1,
+        "first_name": "John",
+        "last_name": "Smith",
+        "mobile_number": 1234567890,
+        "reservation_date": "2020-01-20",
+        "reservation_time": "14:30",
+        "people": 5,
+        "status": "seated",
         "created_at": "2020-12-10 03:30:32"
         "updated_at": "2020-12-10 03:30:32"
     }
@@ -216,7 +247,7 @@ The app's functionality includes:
 ##### GET `/tables`
 
 ```js
-    // res.body
+    // res.body.data
     // array containing:
     {
         "table_id": 2,
@@ -231,13 +262,13 @@ The app's functionality includes:
 ##### POST `/tables`
 
 ```js
-    // req.body
+    // req.body.data
     {
         "table_name": "Bar #3",
         "capacity": 1,
     }
 
-    // res.body
+    // res.body.data
     {
         "status": 201,
         "data": {
@@ -254,12 +285,12 @@ The app's functionality includes:
 ##### PUT `/tables/:table_id/seat`
 
 ```js
-    // req.body
+    // req.body.data
     {
         "reservation_id": 1
     }
 
-    // res.body
+    // res.body.data
     {
         "status": 200,
         "data": {
@@ -276,7 +307,7 @@ The app's functionality includes:
 ##### DELETE `/tables/:table_id/seat`
 
 ```js
-    // res.body
+    // res.body.data
     {
         "status": 200
     }

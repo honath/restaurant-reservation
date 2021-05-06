@@ -13,17 +13,37 @@ function read(table_id) {
 }
 
 function update(table_id, reservation_id) {
-  return knex("tables")
-    .where({ table_id: table_id })
-    .update({ reservation_id: reservation_id })
-    .returning("*");
+  return knex.transaction((trx) => {
+    return knex("reservations")
+      .transacting(trx)
+      .where({ reservation_id: reservation_id })
+      .update({ status: "seated" })
+      .then(() => {
+        return knex("tables")
+          .where({ table_id: table_id })
+          .update({ reservation_id: reservation_id })
+          .returning("*");
+      })
+      .then(trx.commit)
+      .catch(trx.rollback);
+  });
 }
 
-function destroy(table_id) {
-  return knex("tables")
-    .where({ table_id: table_id })
-    .update({ "reservation_id": null })
-    .returning("*");
+function destroy(table_id, reservation_id) {
+  return knex.transaction((trx) => {
+    return knex("reservations")
+      .transacting(trx)
+      .where({ reservation_id: reservation_id })
+      .update({ status: "finished" })
+      .then(() => {
+        return knex("tables")
+          .where({ table_id: table_id })
+          .update({ reservation_id: null })
+          .returning("*");
+      })
+      .then(trx.commit)
+      .catch(trx.rollback);
+  });
 }
 
 module.exports = {
@@ -31,5 +51,5 @@ module.exports = {
   create,
   read,
   update,
-  destroy
+  destroy,
 };

@@ -29,7 +29,7 @@ function Dashboard({ date }) {
   const today = date;
   if (query) date = query;
 
-  useEffect(loadReservations, [date]);
+  useEffect(loadReservations, [date, reload]);
   useEffect(loadTables, [date, reload]);
 
   function loadReservations() {

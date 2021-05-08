@@ -46,7 +46,7 @@ You can access a working prototype of the React app here: https://restaurant-res
 - I want a reservation to have a status of either booked, seated, or finished
 - so that I can see which reservation parties are seated, and finished reservations are hidden from the dashboard.
 
-##### US-07 Search for a reservation by phone number (Importance - Low)
+##### US-07 Search for a reservation by phone number (Importance - Low) (Est. 5 hrs)
 
 - As a restaurant manager
 - I want to search for a reservation by phone number (partial or complete)
@@ -90,8 +90,8 @@ The app's functionality includes:
       - **Menu.js** (stateless) - Navigation sidebar
       - **Routes.js** (stateless) - routing file for URLs
         - **Dashboard.js** (stateless)
-          - **Reservations.js** (stateful) - gets _reservations_ and _date_ from Dashboard.js
-            - **ReservationRows.js** (stateful) - gets _sortedReservations_ and _date_ from Reservations.js
+          - **Reservations.js** (stateful) - gets _reservations_ from Dashboard.js
+            - **ReservationRows.js** (stateful) - gets _sortedReservations_ from Reservations.js
           - **Tables.js** (stateful) - gets _tables_, _reload_, _setReload_ from Dashboard.js
         - **NewReservation.js** (stateless)
           - **NewResForm.js** (stateful) - gets _formData_, _setFormData_, _setDateError_, _setFormError_, and today's date from NewReservation.js
@@ -100,6 +100,9 @@ The app's functionality includes:
         - **SeatTable.js** (stateless)
           - **ReservationCard.js** (stateful) - gets _reservation_ from SeatTable.js - displays as Bootstrap card
           - **SeatTableForm.js** (stateful) - gets _tables_, _reservation_, _selection_, _setSelection_, and _setSeatError_ from SeatTable.js
+        - **SearchBar.js** (stateful)
+          - **Reservations.js** (stateful) - gets _reservations_ from SearchBar.js
+            - **ReservationRows.js** (stateful) - gets _sortedReservations_ from Reservations.js
       - **ErrorAlert.js** (stateful) - Displays error alert when an error is present
       - **NotFound.js** (stateless) 404 Not Found
 

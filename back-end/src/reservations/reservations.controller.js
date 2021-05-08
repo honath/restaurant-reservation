@@ -10,11 +10,13 @@ async function list(req, res) {
   const methodName = "list";
   req.log.debug({ __filename, methodName });
 
-  const { date } = req.query;
+  const { date, mobile_number } = req.query;
 
-  const reservations = date
-    ? await service.listWithDate(date)
-    : await service.list();
+  let reservations;
+
+  if (date) reservations = await service.listWithDate(date);
+  else if (mobile_number) reservations = await service.search(mobile_number);
+  else reservations = await service.list();
 
   res.status(200).json({ data: await reservations });
 }
@@ -28,6 +30,9 @@ async function create(req, res) {
   req.log.debug({ __filename, methodName });
 
   const { reservation } = res.locals;
+  const { mobile_number } = reservation;
+
+  reservation.mobile_number = await formatPhone(mobile_number);
 
   const newReservation = await service.create(reservation);
 
@@ -380,6 +385,15 @@ function toMinutes(timeString) {
   const [hour, minutes] = timeString.split(":");
 
   return Number.parseInt(hour) * 60 + Number.parseInt(minutes);
+}
+
+function formatPhone(phone) {
+  const numbers = phone.match(/\d/g).map(Number);
+
+  numbers.splice(3, 0, "-");
+  numbers.splice(7, 0, "-");
+
+  return numbers.join("");
 }
 // #endregion
 

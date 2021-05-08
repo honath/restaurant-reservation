@@ -36,7 +36,7 @@ function Dashboard({ date }) {
     setReservationsError(null);
     let source = axios.CancelToken.source();
 
-    listReservations(source).then(setReservations).catch(setReservationsError);
+    listReservations(date, source).then(setReservations).catch(setReservationsError);
 
     return () => source.cancel();
   }
@@ -45,7 +45,7 @@ function Dashboard({ date }) {
     setTablesError(null);
     let source = axios.CancelToken.source();
 
-    listTables(source).then(setTables).catch(setTablesError);
+    listTables(date, source).then(setTables).catch(setTablesError);
 
     return () => source.cancel();
   }
@@ -56,7 +56,7 @@ function Dashboard({ date }) {
       <main className="row container-fluid flex-column flex-md-row m-0 justify-content-center">
         <section className="col m-0">
           <NavigateDates date={date} today={today}/>
-          <Reservations reservations={reservations} date={date} />
+          <Reservations reservations={reservations} />
           <ErrorAlert error={reservationsError} />
         </section>
         <section className="col-3 m-0">

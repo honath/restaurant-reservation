@@ -10,7 +10,7 @@ import ReservationRows from "./ReservationRows";
  * @param {String} date determined in parent (Dashboard.js)
  * @returns {JSX.Element}
  */
-function Reservations({ reservations, date }) {
+function Reservations({ reservations }) {
   /* Sort reservations by time */
   const sortedReservations = sortReservations(reservations);
 
@@ -27,7 +27,7 @@ function Reservations({ reservations, date }) {
           <th className="text-center">Actions</th>
         </tr>
       </thead>
-      <ReservationRows sortedReservations={sortedReservations} date={date} />
+      <ReservationRows sortedReservations={sortedReservations} />
     </table>
   );
 }

@@ -20,12 +20,14 @@ headers.append("Content-Type", "application/json");
  * @param source
  * @returns {Promise<[reservation]>}
  */
-export async function listReservations(source) {
-  const url = `${API_BASE_URL}/reservations`;
+export async function listReservations(query = null, source) {
+  const baseUrl = `${API_BASE_URL}/reservations`;
+
+  const url = query !== null ? await checkQuery(baseUrl, query) : baseUrl;
 
   const config = {
     headers,
-    cancelToken: source.token,
+    cancelToken: source.token
   };
 
   return axios
@@ -52,6 +54,21 @@ export async function listReservations(source) {
 
       return Promise.reject({ status, message: error });
     });
+}
+
+/**
+ * Takes in a base URL and a query
+ * Compares for valid queries and returns
+ * appropriate server route
+ * @param {String} url base URL
+ * @param {String} query possible query
+ * @returns {String} complete server route with query
+ */
+function checkQuery(url, query) {
+  if (query.match(/\d\d\d\d-\d\d-\d\d/)) return `${url}?date=${query}`;
+  else if (query.match(/\d\d\d-\d\d\d-\d\d\d\d/))
+    return `${url}?mobile_number=${query}`;
+  else return `${url}`;
 }
 
 /**
@@ -180,7 +197,7 @@ export function seatTable(table_id, reservation_id) {
  * Takes in table ID and
  * "unseats" reservation from
  * table (delete reservation_id)
- * @param {Integer} table_id 
+ * @param {Integer} table_id
  * @returns {Promise}
  */
 export function finishTable(table_id) {

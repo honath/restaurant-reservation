@@ -16,6 +16,9 @@ import SearchRes from "../search/SearchBar";
 function Routes() {
   return (
     <Switch>
+      <Route path="/reservations/:reservation_id/edit">
+        <NewReservation />
+      </Route>
       <Route path="/reservations/:reservation_id/seat">
         <SeatTable />
       </Route>

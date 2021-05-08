@@ -27,7 +27,7 @@ export async function listReservations(query = null, source) {
 
   const config = {
     headers,
-    cancelToken: source.token
+    cancelToken: source.token,
   };
 
   return axios
@@ -110,6 +110,52 @@ export function createReservation(reservation) {
 
   return axios
     .post(url, { data: reservation }, { config })
+    .then((res) => res.data.data)
+    .catch(({ response }) => {
+      const { status } = response;
+      const { error } = response.data;
+
+      return Promise.reject({ status, message: error });
+    });
+}
+
+/**
+ * Takes in form data as
+ * reservation object
+ * to update in DB
+ * @param {Object} reservation
+ * @returns {Promise} 
+ */
+export function updateReservation(updatedReservation, reservation_id) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}`;
+
+  const config = { headers };
+
+  return axios
+    .put(url, { data: updatedReservation }, { config })
+    .then((res) => res.data.data)
+    .catch(({ response }) => {
+      const { status } = response;
+      const { error } = response.data;
+
+      return Promise.reject({ status, message: error });
+    });
+}
+
+/**
+ * Takes in reservation_id
+ * Updates status for matching
+ * reservation to "cancelled"
+ * @param {Object} reservation
+ * @returns {Promise} 
+ */
+export function cancelReservation(reservation_id) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
+
+  const config = { headers };
+
+  return axios
+    .put(url, { data: { status: "cancelled" } }, { config })
     .then((res) => res.data.data)
     .catch(({ response }) => {
       const { status } = response;

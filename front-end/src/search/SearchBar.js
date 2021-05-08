@@ -9,12 +9,14 @@ import axios from "axios";
 function SearchBar() {
   const [search, setSearch] = useState("");
   const [reload, setReload] = useState(0);
+  
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(loadReservations, [reload]);
 
+  /* Fetch reservations by phone number */
   function loadReservations() {
     setReservationsError(null);
     let source = axios.CancelToken.source();
@@ -27,10 +29,17 @@ function SearchBar() {
     return () => source.cancel();
   }
 
+  /* Search data updater */
   function handleChange({ target }) {
     setSearch(target.value);
   }
 
+  /**
+   * Validates phone number 
+   * input and fetches
+   * all matching reservations
+   * by mobile_number
+   */
   function handleSubmit(event) {
     event.preventDefault();
     setReservations([]);
@@ -63,6 +72,7 @@ function SearchBar() {
     }
   }
 
+  /* Render */
   return (
     <Fragment>
       <PageHeader title={"Search Reservations"} />

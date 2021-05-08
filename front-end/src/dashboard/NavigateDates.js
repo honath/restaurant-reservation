@@ -4,7 +4,12 @@ import { next, previous } from "../utils/date-time";
 
 import "../common/common.css";
 
-
+/**
+ * Controls date navigation
+ * @param {String} date
+ * @param {String} today
+ * @returns {JSX.Element}
+ */
 function NavigateDates({ date, today }) {
   const history = useHistory();
 

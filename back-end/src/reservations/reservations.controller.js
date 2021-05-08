@@ -30,9 +30,6 @@ async function create(req, res) {
   req.log.debug({ __filename, methodName });
 
   const { reservation } = res.locals;
-  const { mobile_number } = reservation;
-
-  reservation.mobile_number = await formatPhone(mobile_number);
 
   const newReservation = await service.create(reservation);
 
@@ -51,6 +48,23 @@ function read(req, res) {
   const { reservation } = res.locals;
 
   res.status(200).json({ data: reservation });
+}
+
+/**
+ * Updates reservation
+ * by ID
+ * @returns {Object} Updated reservation from table
+ */
+async function update(req, res) {
+  const methodName = "update";
+  req.log.debug({ __filename, methodName });
+
+  const { reservation_id } = req.params;
+  const { reservation } = res.locals;
+
+  const updatedReservation = await service.update(reservation, reservation_id);
+
+  res.status(200).json({ data: await updatedReservation[0] });
 }
 
 /**
@@ -286,7 +300,7 @@ function isValidStatus(req, res, next) {
   req.log.debug({ __filename, methodName });
 
   const { data: { status } = {} } = req.body;
-  const validStatuses = ["booked", "seated", "finished"];
+  const validStatuses = ["booked", "seated", "finished", "cancelled"];
 
   if (validStatuses.includes(status)) {
     res.locals.status = status;
@@ -387,14 +401,14 @@ function toMinutes(timeString) {
   return Number.parseInt(hour) * 60 + Number.parseInt(minutes);
 }
 
-function formatPhone(phone) {
+/* function formatPhone(phone) {
   const numbers = phone.match(/\d/g).map(Number);
 
   numbers.splice(3, 0, "-");
   numbers.splice(7, 0, "-");
 
   return numbers.join("");
-}
+} */
 // #endregion
 
 module.exports = {
@@ -408,6 +422,15 @@ module.exports = {
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(reservationExists), read],
+  update: [
+    asyncErrorBoundary(reservationExists),
+    validateReservation,
+    isInvalidStatus,
+    isFutureDate,
+    isNotTuesday,
+    isValidTime,
+    asyncErrorBoundary(update),
+  ],
   updateStatus: [
     asyncErrorBoundary(reservationExists),
     statusNotFinished,

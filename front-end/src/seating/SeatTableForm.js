@@ -63,6 +63,7 @@ function SeatTableForm({
     }
   }
 
+  /* Return to previous page on cancel */
   function handleCancel(event) {
     event.preventDefault();
 

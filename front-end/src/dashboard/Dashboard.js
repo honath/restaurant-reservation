@@ -25,6 +25,7 @@ function Dashboard({ date }) {
 
   const [reload, setReload] = useState(false);
 
+  /* Fetches date from URL query */
   const query = useQuery().get("date");
   const today = date;
   if (query) date = query;
@@ -32,6 +33,7 @@ function Dashboard({ date }) {
   useEffect(loadReservations, [date, reload]);
   useEffect(loadTables, [date, reload]);
 
+  /* Fetch all reservations by date from db */
   function loadReservations() {
     setReservationsError(null);
     let source = axios.CancelToken.source();
@@ -41,6 +43,7 @@ function Dashboard({ date }) {
     return () => source.cancel();
   }
 
+  /* Fetch all tables from db */
   function loadTables() {
     setTablesError(null);
     let source = axios.CancelToken.source();
@@ -50,6 +53,7 @@ function Dashboard({ date }) {
     return () => source.cancel();
   }
 
+  /* Render */
   return (
     <Fragment>
       <PageHeader title={"Dashboard"} date={date} />

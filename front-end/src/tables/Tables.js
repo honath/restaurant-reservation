@@ -5,10 +5,24 @@ import { sortTables } from "../common/sortTables";
 import "../common/common.css";
 import { finishTable } from "../utils/api";
 
+/**
+ * Takes in and formats tables as a table
+ * @param {Array} reservations
+ * @param {Boolean} reload for triggering useEffect
+ * @param {Function} setReload for triggering useEffect
+ * @returns {JSX.Element}
+ */
 function Tables({ tables, reload, setReload }) {
   /* Sort tables by name */
   const sortedTables = sortTables(tables);
 
+  /**
+   * Sends DELETE request
+   * to server to
+   * remove reservation_id
+   * from related table in
+   * "tables" table
+   */
   async function handleFinishClick({ target }) {
     const table_id = target.id;
     const message = `Is this table ready to seat new guests? This cannot be undone.`;

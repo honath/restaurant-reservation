@@ -35,6 +35,30 @@ function read(reservation_id) {
     .first();
 }
 
+function update(
+  {
+    first_name,
+    last_name,
+    mobile_number,
+    reservation_date,
+    reservation_time,
+    people,
+  },
+  reservation_id
+) {
+  return knex("reservations")
+    .where({ reservation_id: reservation_id })
+    .update({
+      first_name,
+      last_name,
+      mobile_number,
+      reservation_date,
+      reservation_time,
+      people,
+    })
+    .returning("*");
+}
+
 function updateStatus(reservation_id, status) {
   return knex("reservations")
     .where({ reservation_id: reservation_id })
@@ -48,5 +72,6 @@ module.exports = {
   search,
   create,
   read,
+  update,
   updateStatus,
 };

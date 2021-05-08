@@ -7,16 +7,29 @@ import ErrorAlert from "../layout/ErrorAlert";
 import SeatTableForm from "./SeatTableForm";
 import ReservationCard from "./ReservationCard";
 
+/**
+ * Handles seating a reservation 
+ * at a table
+ * =========
+ * Primary render controller/
+ * state holder for
+ * form, card, and error
+ * components
+ * @returns {JSX.Element}
+ */
 function SeatTable() {
   const { reservation_id } = useParams();
+
   const [tables, setTables] = useState();
   const [reservation, setReservation] = useState({});
+
   const [selection, setSelection] = useState();
   const [seatError, setSeatError] = useState(null);
 
   useEffect(loadTables, []);
   useEffect(getReservation, [reservation_id]);
 
+  /* Fetch all tables from DB */
   function loadTables() {
     setSeatError(null);
     let source = axios.CancelToken.source();
@@ -28,6 +41,7 @@ function SeatTable() {
     return () => source.cancel();
   }
 
+  /* Fetch reservation by ID */
   function getReservation() {
     let source = axios.CancelToken.source();
 
@@ -38,6 +52,7 @@ function SeatTable() {
     return () => source.cancel();
   }
 
+  /* Render */
   return (
     <Fragment>
       <PageHeader title={`Seat Reservation #${reservation_id}`} />

@@ -18,6 +18,7 @@ import { createTable } from "../utils/api";
 function NewTableForm({ formData, setFormData, setFormError }) {
   const history = useHistory();
 
+  /* Update form data */
   function handleChange({ target }) {
     const name = target.name;
     const value = target.value;
@@ -28,6 +29,12 @@ function NewTableForm({ formData, setFormData, setFormError }) {
     });
   }
 
+  /**
+   * Submission handler
+   * Sends POST request
+   * to DB to create
+   * a new reservation
+   */
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -47,6 +54,7 @@ function NewTableForm({ formData, setFormData, setFormError }) {
     }
   }
 
+  /* Return to previous page on cancel */
   function handleCancel(event) {
     event.preventDefault();
 

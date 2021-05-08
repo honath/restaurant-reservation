@@ -1,6 +1,6 @@
 import React from "react";
-import { useHistory } from "react-router";
-import { createReservation } from "../utils/api";
+import { useHistory, useParams } from "react-router";
+import { createReservation, updateReservation } from "../utils/api";
 import isValidDate from "./isValidDate";
 import isValidTime from "./isValidTime";
 
@@ -28,8 +28,10 @@ function NewResForm({
   setDateError,
   today,
 }) {
+  const { reservation_id } = useParams();
   const history = useHistory();
 
+  /* Update form data */
   function handleChange({ target }) {
     const name = target.name;
     const value = target.value;
@@ -46,6 +48,13 @@ function NewResForm({
       });
   }
 
+  /**
+   * Checks date and timefrom form
+   * If valid, sends either a PUT
+   * or POST request to server,
+   * depending on route param
+   * {reservation_id}
+   */
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -60,20 +69,30 @@ function NewResForm({
       setDateError({
         message: `${time} is not a valid reservation time. Reservation must be between 10:30 AM and 9:30 PM`,
       });
-    else
-      await createReservation(formData)
-        .then((res) => {
-          history.push(`/dashboard?date=${date}`)
-        })
-        .catch(setFormError);
+    else {
+      if (reservation_id)
+        await updateReservation(formData, reservation_id)
+          .then((res) => {
+            history.push(`/dashboard?date=${date}`);
+          })
+          .catch(setFormError);
+      else
+        await createReservation(formData)
+          .then((res) => {
+            history.push(`/dashboard?date=${date}`);
+          })
+          .catch(setFormError);
+    }
   }
 
+  /* Return to previous page on cancel */
   function handleCancel(event) {
     event.preventDefault();
 
     history.goBack();
   }
 
+  /* Render */
   return (
     <main className="mt-4">
       <form className="m-3">

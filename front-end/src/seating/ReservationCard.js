@@ -1,7 +1,15 @@
 import React from "react";
 import { formatAsDate } from "../utils/date-time";
 
+/**
+ * Takes in reservation object
+ * renders bootstrap card component
+ * displaying reservation information
+ * @param {Object} reservation 
+ * @returns {JSX.Element}
+ */
 function ReservationCard({ reservation }) {
+  /* Render when ready */
   if (reservation.first_name) {
     const { first_name, last_name, mobile_number, people } = reservation;
     const date = formatAsDate(reservation.reservation_date);
@@ -26,6 +34,7 @@ function ReservationCard({ reservation }) {
     );
   }
 
+  /* Default render */
   return <p className="p-5">Getting reservation information...</p>;
 }
 

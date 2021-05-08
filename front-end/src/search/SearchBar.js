@@ -12,6 +12,7 @@ function SearchBar() {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(loadReservations, [reload]);
 
   function loadReservations() {

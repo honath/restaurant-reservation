@@ -5,8 +5,7 @@ import { formatAsDate, formatAsTime } from "./date-time";
  * Defines the base URL for the API.
  * The default values is overridden by the `API_BASE_URL` environment variable.
  */
-const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 /**
  * Defines the default headers for these functions to work with `json-server`
@@ -124,7 +123,7 @@ export function createReservation(reservation) {
  * reservation object
  * to update in DB
  * @param {Object} reservation
- * @returns {Promise} 
+ * @returns {Promise}
  */
 export function updateReservation(updatedReservation, reservation_id) {
   const url = `${API_BASE_URL}/reservations/${reservation_id}`;
@@ -147,7 +146,7 @@ export function updateReservation(updatedReservation, reservation_id) {
  * Updates status for matching
  * reservation to "cancelled"
  * @param {Object} reservation
- * @returns {Promise} 
+ * @returns {Promise}
  */
 export function cancelReservation(reservation_id) {
   const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;

@@ -95,7 +95,7 @@ function NewResForm({
   /* Render */
   return (
     <main className="mt-4">
-      <form className="m-3">
+      <form className="m-3 pl-3">
         <div className="form-row mb-4">
           <div className="col-md-3">
             <label htmlFor="first_name" className="form-label mb-0">

@@ -63,7 +63,7 @@ function Dashboard({ date }) {
           <Reservations reservations={reservations} />
           <ErrorAlert error={reservationsError} />
         </section>
-        <section className="col-3 m-0">
+        <section className="col col-lg-3  m-0">
           <Tables tables={tables} reload={reload} setReload={setReload}/>
           <ErrorAlert error={tablesError} />
         </section>

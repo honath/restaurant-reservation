@@ -247,6 +247,9 @@ async function reservationExists(req, res, next) {
   }
 }
 
+/**
+ * Confirm table is not already seated
+ */
 function isNotSeated(req, res, next) {
   const methodName = "isNotSeated";
   req.log.debug({ __filename, methodName });

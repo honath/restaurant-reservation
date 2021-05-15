@@ -16,19 +16,21 @@ function Reservations({ reservations }) {
 
   /* Moved table rows and render condition to {./ReservationRows.js} */
   return (
-    <table className="table">
-      <thead>
-        <tr className="res-text">
-          <th className="text-center">Name</th>
-          <th className="text-center">Contact</th>
-          <th className="text-center">Date</th>
-          <th className="text-center">Time</th>
-          <th className="text-center">Status</th>
-          <th className="text-center">Actions</th>
-        </tr>
-      </thead>
-      <ReservationRows sortedReservations={sortedReservations} />
-    </table>
+    <div className="table-responsive-lg">
+      <table className="table">
+        <thead>
+          <tr className="res-text">
+            <th className="text-center">Name</th>
+            <th className="text-center">Contact</th>
+            <th className="text-center">Date</th>
+            <th className="text-center">Time</th>
+            <th className="text-center">Status</th>
+            <th className="text-center">Actions</th>
+          </tr>
+        </thead>
+        <ReservationRows sortedReservations={sortedReservations} />
+      </table>
+    </div>
   );
 }
 

@@ -63,7 +63,7 @@ function NewTableForm({ formData, setFormData, setFormError }) {
 
   return (
     <main className="mt-4 w-100">
-      <form className="m-3">
+      <form className="m-3 pl-3">
         <div className="form-row">
           <div className="col-md-4">
             <label htmlFor="table_name" className="form-label mb-0">
